@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
             "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\advent-of-code\\2024\\Day 1 HIstorian Hysteria\\code.js"
+            "program": "${workspaceFolder}\\advent-of-code\\2025\\Day 1 Secret Entrance\\src\\part2.js"
         }
     ]
 }
