@@ -5,7 +5,7 @@ import * as path from 'path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { getZeroesInRange } from './utills.js';
+//import { getZeroesInRange } from './utills.js';
 
 function main(){
     let inputs = getProblemInput();
@@ -44,33 +44,30 @@ function processInputs(inputs){
         
         let rangeZeroes = getZeroesInRange(itStart, itEnd);
         foundZeroes += rangeZeroes;
-
-        // if (currentCounter % 100 === 0){
-        //     // console.log(`Found a multiple of 100: ${currentCounter}`);
-        //     foundZeroes += 1;
-        // }
-        // console.log(`iteration: ${iterations}. Move: ${line}. Current counter is: ${currentCounter}`);
     }
 
     return foundZeroes;
 }
 
-// function getZeroesInRange(start, end){
-//     let zeroesFound = 0;
+export function getZeroesInRange(start, end){
+    let zeroesFound = 0;
 
-//     let incrementor = start < end ? 1 : -1;
-//     for (let i = start; incrementor > 0 ? i <= end : i >= end; i += incrementor){
-//         if (i % 100 === 0){
-//             zeroesFound += 1;
+    if (start === end){
+        return 0;
+    }
+    let incrementor = start < end ? 1 : -1;
+    for (let i = start + incrementor; incrementor > 0 ? i <= end : i >= end; i += incrementor){
+        if (i % 100 === 0){
+            zeroesFound += 1;
 
-//             // Calculate remaining zeroes, no need to iterate further
-//             let remainingRange = Math.abs(end - i);
-//             let additionalZeroes = Math.floor(remainingRange / 100);
-//             zeroesFound += additionalZeroes;
-//             break;
-//         }
-//     }
-//     return zeroesFound;
-// }
+            // Calculate remaining zeroes, no need to iterate further
+            let remainingRange = Math.abs(end - i);
+            let additionalZeroes = Math.floor(remainingRange / 100);
+            zeroesFound += additionalZeroes;
+            break;
+        }
+    }
+    return zeroesFound;
+}
 
 main();
