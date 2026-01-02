@@ -1,2 +1,4 @@
 /code/target**
-/code/input
+/code/input.txt
+
+*.pdb
