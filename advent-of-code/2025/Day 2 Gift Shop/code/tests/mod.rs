@@ -25,6 +25,7 @@ mod tests{
         let start = 95;
         let end = 115;
         let exp = 99;
+        let exp2 = 210;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -32,14 +33,16 @@ mod tests{
         assert_eq!(dups, exp);
 
         let dups = part2::get_dups_for_range(test_range);
-        assert_eq!(dups, exp)
+        assert_eq!(dups, exp2)
     }
 
     #[test]
     fn test_998_1012(){
         let start = 998;
-        let end = 1012;
+        let end = 1010;
+
         let exp = 1010;
+        let exp2 = 2009;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -47,7 +50,7 @@ mod tests{
         assert_eq!(dups, exp);
 
         let dups = part2::get_dups_for_range(test_range);
-        assert_eq!(dups, exp)
+        assert_eq!(dups, exp2)
         
     }
 
@@ -86,6 +89,7 @@ mod tests{
         let start = 1698522;
         let end = 1698528;
         let exp = 0;
+        let exp2 = 0;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -93,7 +97,7 @@ mod tests{
         assert_eq!(dups, exp);
 
         let dups = part2::get_dups_for_range(test_range);
-        assert_eq!(dups, exp)
+        assert_eq!(dups, exp2)
     }
 
     #[test]
