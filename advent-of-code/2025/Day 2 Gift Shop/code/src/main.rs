@@ -1,12 +1,36 @@
 // https://adventofcode.com/2025/day/2
 
+mod tests;
+
 use std::io::Error;
-use std::{env, fs, result};
+use std::{env, fs};
 
 fn main() {
     println!("Hello, world!");
 
     let ranges = get_ranges();
+
+    let result: i32 = search_ranges(ranges);
+
+    println!("Total dups= {result}");
+}
+
+pub fn search_ranges(ranges: Vec<Range>)-> i32{
+    let mut total_dups: i32 = 0;
+
+    for range in ranges.iter(){
+        let cur_range_dups = get_dups_for_range(range);
+        total_dups += cur_range_dups;
+    }
+
+    return total_dups;
+}
+fn get_dups_for_range(range: &Range)-> i32{
+    let mut dups_in_range = 0;
+
+    dups_in_range += 2;
+    
+    return dups_in_range;
 }
 
 fn get_ranges()-> Vec<Range> {
@@ -45,7 +69,7 @@ fn get_input()-> Result<String, Error>{
     Ok(contents)
 }
 
-struct Range {
+pub struct Range {
     start: i32,
     end: i32
 }
