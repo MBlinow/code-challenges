@@ -1,5 +1,6 @@
 // https://adventofcode.com/2025/day/2
 
+#[cfg(test)]
 mod tests;
 
 use std::io::Error;
