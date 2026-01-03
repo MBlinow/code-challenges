@@ -6,17 +6,17 @@ use std::io::Error;
 use std::{env, fs};
 
 fn main() {
-    println!("Hello, world!");
+    println!("Starting...");
 
-    let ranges = get_ranges();
+    let ranges   = get_ranges();
 
-    let result: i32 = search_ranges(ranges);
+    let result = search_ranges(ranges);
 
     println!("Total dups= {result}");
 }
 
-pub fn search_ranges(ranges: Vec<Range>)-> i32{
-    let mut total_dups: i32 = 0;
+pub fn search_ranges(ranges: Vec<Range>)-> i64{
+    let mut total_dups: i64 = 0;
 
     for range in ranges.iter(){
         let cur_range_dups = get_dups_for_range(range);
@@ -25,12 +25,46 @@ pub fn search_ranges(ranges: Vec<Range>)-> i32{
 
     return total_dups;
 }
-fn get_dups_for_range(range: &Range)-> i32{
+fn get_dups_for_range(range: &Range)-> i64{
     let mut dups_in_range = 0;
 
-    dups_in_range += 2;
+    // First pass naive solution
+    // Should be optimized later
+    for n in range.start..=range.end {
+        let is_valid = num_is_valid(&n);
+
+        if !is_valid{
+            dups_in_range += n;
+        }
+    }
+
     
     return dups_in_range;
+}
+
+fn num_is_valid(num: &i64)-> bool{
+    //return false;
+    let num_string = num.to_string();
+
+    let num_count = num_string.chars().count();
+
+    // value is odd in size, cannot be mirrored
+    if num_count %2 != 0{
+        return true;
+    }
+
+    let halfway_index = num_count / 2;
+
+    let num_string_half = &num_string[0..halfway_index];
+
+    let mut duped_first_half: String = num_string_half.to_string();
+    duped_first_half.push_str(num_string_half);
+
+    if num_string == duped_first_half {
+        return false;
+    }
+    else {return true;}
+
 }
 
 fn get_ranges()-> Vec<Range> {
@@ -48,8 +82,8 @@ fn get_ranges()-> Vec<Range> {
             .map(|s| s.to_string())
             .collect::<Vec<String>>();
 
-        let start_val = values[0].parse::<i32>().unwrap();
-        let end_val =  values[1].parse::<i32>().unwrap();
+        let start_val = values[0].parse::<i64>().unwrap();
+        let end_val =  values[1].parse::<i64>().unwrap();
 
         results.push(Range{start: start_val, end: end_val});
     }
@@ -70,6 +104,6 @@ fn get_input()-> Result<String, Error>{
 }
 
 pub struct Range {
-    start: i32,
-    end: i32
+    start: i64,
+    end: i64
 }

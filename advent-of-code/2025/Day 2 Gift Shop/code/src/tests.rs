@@ -6,7 +6,7 @@ mod tests{
     fn test_11_22(){
         let start = 11;
         let end = 22;
-        let exp = 2;
+        let exp = 33;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -18,7 +18,7 @@ mod tests{
     fn test_95_115(){
         let start = 95;
         let end = 115;
-        let exp = 1;
+        let exp = 99;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -30,7 +30,7 @@ mod tests{
     fn test_998_1012(){
         let start = 998;
         let end = 1012;
-        let exp = 1;
+        let exp = 1010;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -42,7 +42,7 @@ mod tests{
     fn test_4(){
         let start = 1188511880;
         let end = 1188511890;
-        let exp = 1;
+        let exp = 1188511885;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -54,7 +54,7 @@ mod tests{
     fn test_5(){
         let start = 222220;
         let end = 222224;
-        let exp = 1;
+        let exp = 222222;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -78,7 +78,7 @@ mod tests{
     fn test_7(){
         let start = 446443;
         let end = 446449;
-        let exp = 1;
+        let exp = 446446;
 
         let test_range: &Range = &Range{start: start, end: end};
 
@@ -90,7 +90,7 @@ mod tests{
     fn test_8(){
         let start = 38593856;
         let end = 38593862;
-        let exp = 1;
+        let exp = 38593859;
 
         let test_range: &Range = &Range{start: start, end: end};
 
