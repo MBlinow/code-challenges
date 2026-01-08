@@ -1,12 +1,14 @@
 ﻿// https://adventofcode.com/2025/day/3
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Starting...");
 
 var input_lines = parse_input();
 
 Console.WriteLine($"Input lines: {input_lines.Count}");
 
-Console.WriteLine($"Jolts: {get_jolts(input_lines)}");
+var result = get_jolts(input_lines);
+
+Console.WriteLine($"Jolts: {result}");
 
 static List<string> parse_input()
 {
@@ -23,25 +25,22 @@ static List<string> parse_input()
     return lines;
 }
 
-static int get_jolts(List<string> lines)
+static long get_jolts(List<string> lines)
 {
-    int jolts = 0;
+    long jolts = 0;
 
     foreach (var line in lines)
     {
-        jolts +=get_jolts_from_line(line);
+        jolts += get_jolts_from_line_part2(line);
     }
 
     return jolts;
 }
 
-static int get_jolts_from_line(string line)
+static int get_jolts_from_line_part1(string line)
 {
     char max_Tens = '0';
-    int max_tens_index = -1;
-
     char max_Ones = '0';
-    int max_ones_index = -1;
 
     // Get max tens place digit
     for (int i = 0; i < line.Length; i++)
@@ -51,18 +50,15 @@ static int get_jolts_from_line(string line)
         if (current > max_Ones)
         {
             max_Ones = current;
-            max_ones_index = i;
         }
         
         bool last_char = (i == line.Length - 1);
         if ( !last_char && current > max_Tens)
         {
             max_Tens = current;
-            max_tens_index = i;
 
             // reset ones when setting tens
             max_Ones = '0';
-            max_ones_index = -1;
         }
         
         
@@ -70,4 +66,53 @@ static int get_jolts_from_line(string line)
 
     string max_val_str = max_Tens.ToString() + max_Ones.ToString();
     return int.Parse(max_val_str);
+}
+
+static long get_jolts_from_line_part2(string line, int digit_limit = 12)
+{
+    int[] max_val_arr = Enumerable.Repeat(0, digit_limit).ToArray();
+
+    int line_digits_remaining = line.Length;
+
+    for (int i = 0; i < line.Length; i++)
+    {
+        int currentInt = int.Parse(line[i].ToString());
+
+        int max_digits_current = line.Length - i;
+        int max_digits_index = digit_limit - max_digits_current;
+
+        int j_loop_start =  (max_digits_index > 0) ? max_digits_index : 0;
+        for (int j = j_loop_start; j < max_val_arr.Length; j++)
+        {
+            if (currentInt > max_val_arr[j])
+            {
+                //update value
+                max_val_arr[j] = currentInt;
+                //zero rest of array
+                if (j < (max_val_arr.Length -1)){
+                    zero_int_array_from_index(max_val_arr, j+1);
+                }
+                //skip rest of j loop
+                break;
+            }
+        }
+    }
+
+    var result = int_array_to_int(max_val_arr);
+    return result;
+}
+
+static void zero_int_array_from_index(int[] arr, int index)
+{
+    for (int i = index; i < arr.Length; i++)
+    {
+        arr[i] = 0;
+    }
+}
+
+static long int_array_to_int(int[] arr)
+{
+    return arr
+        .Select((t, i) => t * Convert.ToInt64(Math.Pow(10, arr.Length - i - 1)))
+        .Sum();   
 }
