@@ -5,11 +5,99 @@ import * as path from 'path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+type Grid = string[][];
+
 const main = () => {
+    const grid = getData();
+    const result = scanGrid(grid);
+    console.log(result);
+}
+
+const scanGrid = (grid: Grid): number  => {
+    if (!grid[0]?.length) {
+        console.log('!Grid is empty!');
+        return 0;
+    }
+
+    const gridWidth = grid[0].length;
+    const gridHeight = grid.length; 
+
+     let totalValid = 0;
+    let py = 0;
+    let px = 0;
+
+    while ( px < gridWidth && py < gridHeight ){
+        let curChar = grid[py][px] ?? undefined;
+        if (grid[py][px] === ".") continue;
+        
+        const isValid = pointIsValid(px, py, grid);
+        if (isValid) totalValid++;
+
+        if (px < gridWidth) px++;
+        else {
+            py++;
+            px = 0;
+        } 
+    }
+    return 0;
+}
+
+const pointIsValid = (x: number, y: number, grid: Grid): boolean => {
+    let collisions = 0;
+
+    
+    //get three rows, 3 characters width around target
+    //append three rows (9 char total) 
+    //count rollChars in collection.  
+    //Allow 9 chars (including target point which isn't counted against required 8);
+    let checkSquareOriginX = x - 1;
+    let checkSquareOriginY = y + 1;
+
+    for (let i = 0; i < 3; i++){
+        collisions += countRowChunk(checkSquareOriginX, grid[checkSquareOriginY]);
+        checkSquareOriginX++;
+        checkSquareOriginY--;
+    }
+
+    //4 adjecent points plus target point for 5.
+    if (collisions <= 5) return true;
+    return false;
+}
+
+const countRowChunk = (startIndex: number, gridRow: string[] | undefined): number => {
+    const rollChar = '@';
+    let charCount = 0;
+
+    if (!gridRow) return 0;
+
+    let offset = 0;
+    if (startIndex < 0) offset = 1;
+    
+    const chunkString = gridRow.slice(startIndex + offset, startIndex +3);
+
+    chunkString.map(char => {
+        if (char === rollChar) charCount++;
+    });
+
+    //input leftmost x index and row
+    return charCount;
+}
+
+const getData = (): Grid => {
     const fileContents = getFileContents();
     const lines = fileContents.split('\n');
+    const grid = gridFromLines(lines);
+    return grid;
+}
 
-    console.log(lines);
+const gridFromLines = (lines: string[]): Grid => {
+    const twoDGrid: string[][] = [];
+    lines.forEach(line => {
+        const lineArray = line.split('');
+        twoDGrid.push(lineArray);
+    });
+
+    return twoDGrid;
 }
 
 const getFileContents = () => {
