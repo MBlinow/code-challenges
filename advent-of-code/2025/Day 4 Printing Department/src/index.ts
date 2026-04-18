@@ -8,7 +8,10 @@ import { fileURLToPath } from 'node:url';
 type Grid = string[][];
 
 const TARGET_CHAR = "@";
-const INPUT_FILENAME = 'inputTest';
+const INPUT_FILENAME = 'input';
+
+    let pVert = 0;
+    let pHorz = 0;
 
 const main = () => {
     const grid = getData();
@@ -26,39 +29,40 @@ const scanGrid = (grid: Grid): number  => {
     const gridHeight = grid.length; 
 
     let totalValid = 0;
-    let py = 0;
-    let px = 0;
 
-    let debugBuffer = '';
+
+    let debugLineBuffer = '';
 
     let totalChars = gridWidth * gridHeight;
     for ( let i = 0; i < totalChars; i++ ){
-        let curRow = grid[py];
+        let curRow = grid[pVert];
         let curChar: string = 'F';
 
         // Handle non-@ chars
         if (curRow){
-            curChar = curRow[px] ?? '';
+            curChar = curRow[pHorz] ?? '';
         }
 
         if (curChar === "." || curChar === "F") {
-            debugBuffer += curChar;
+            debugLineBuffer += curChar;
         }
         else {
-            const isValid = pointIsValid(px, py, grid);
+            const isValid = pointIsValid(pHorz, pVert, grid);
             if (isValid) totalValid++;
 
-            if (isValid) debugBuffer += 'x'
-            else debugBuffer += curChar;
+            if (isValid) debugLineBuffer += 'x'
+            else debugLineBuffer += curChar;
         }
 
-        if (px < gridWidth) px++;
+        if (pHorz < (gridWidth -1)) pHorz++;
         else {
-            console.log(`${debugBuffer}`)
-            py++;
-            px = 0;
+            console.log(`${debugLineBuffer}`)
+            pVert++;
+            pHorz = 0;
 
-            debugBuffer = '';
+            if (pVert >= gridHeight -1) break;
+
+            debugLineBuffer = '';
         } 
     }
 
@@ -66,6 +70,7 @@ const scanGrid = (grid: Grid): number  => {
 }
 
 //4046 too high
+//1533 too high
 
 const pointIsValid = (x: number, y: number, grid: Grid): boolean => {
     let collisions = 0;
@@ -75,16 +80,20 @@ const pointIsValid = (x: number, y: number, grid: Grid): boolean => {
     //count rollChars in collection.  
     //Allow 9 chars (including target point which isn't counted against required 8);
     let checkSquareOriginX = x - 1;
-    let checkSquareOriginY = y + 1;
+    let checkSquareOriginY = y - 1;
 
     for (let i = 0; i < 3; i++){
         collisions += countRowChunk(checkSquareOriginX, grid[checkSquareOriginY]);
-        checkSquareOriginX++;
-        checkSquareOriginY--;
+        //checkSquareOriginX++;
+        checkSquareOriginY++;
     }
 
-    //4 adjecent points plus target point for 5.
-    if (collisions <= 5) return true;
+
+    if (x === 2 && y === 0) assertEqual(collisions, 4);
+
+    //fewer than 4
+    //3 adjecent points plus target point for 4.
+    if (collisions <= 4) return true;
     return false;
 }
 
@@ -92,12 +101,17 @@ const countRowChunk = (startIndex: number, gridRow: string[] | undefined): numbe
     const rollChar = TARGET_CHAR;
     let charCount = 0;
 
-    if (!gridRow) return 0;
+    if (!gridRow) {
+        //console.log(`returning, row doesn't exist`);
+        return 0; //Returns early for yAxis -1 or length over 1
+    }
 
     let offset = 0;
     if (startIndex < 0) offset = 1;
     
     const chunkString = gridRow.slice(startIndex + offset, startIndex +3);
+
+    //console.log(`Counting chunk ${chunkString}`);
 
     chunkString.map(char => {
         if (char === rollChar) charCount++;
@@ -131,6 +145,18 @@ const getFileContents = () => {
     const fileContents = fs.readFileSync(filePath, 'utf8');
 
     return fileContents;
+}
+
+const assertEqual = (a:unknown, b: unknown) =>{
+    if (a !== b){
+        console.log(`warning!!`);
+    }
+}
+
+const debug = (mes: string) => {
+    const DEBUG = true 
+    //false
+    if (DEBUG) console.log(mes);
 }
 
 main();
