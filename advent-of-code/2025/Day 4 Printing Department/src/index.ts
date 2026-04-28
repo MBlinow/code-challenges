@@ -8,10 +8,9 @@ import { fileURLToPath } from 'node:url';
 type Grid = string[][];
 
 const TARGET_CHAR = "@";
-const INPUT_FILENAME = 'input';
+const INPUT_FILENAME = 'inputTest';
 
-    let pVert = 0;
-    let pHorz = 0;
+
 
 const main = () => {
     const grid = getData();
@@ -20,7 +19,7 @@ const main = () => {
 }
 
 const scanGrid = (grid: Grid): number  => {
-    if (!grid[0]?.length) {
+    if (!grid || !grid[0]?.length) {
         console.log('!Grid is empty!');
         return 0;
     }
@@ -34,36 +33,66 @@ const scanGrid = (grid: Grid): number  => {
     let debugLineBuffer = '';
 
     let totalChars = gridWidth * gridHeight;
-    for ( let i = 0; i < totalChars; i++ ){
-        let curRow = grid[pVert];
-        let curChar: string = 'F';
 
-        // Handle non-@ chars
-        if (curRow){
-            curChar = curRow[pHorz] ?? '';
+    let rollsRemoved = true;
+
+    let removalIterations = 0;
+
+    while (rollsRemoved){
+        rollsRemoved = false;
+        removalIterations++;
+        let removedRolls = 0;
+
+
+        let pVert = 0;
+        let pHorz = 0;
+        for ( let i = 0; i < totalChars; i++ ){
+
+            
+            let curRow = grid[pVert];
+            let curChar: string = 'F';
+
+
+            // Handle non-@ chars
+            if (curRow){
+                curChar = curRow[pHorz] ?? '';
+            }
+
+            if (curChar === "." || curChar === "F") {
+                debugLineBuffer += curChar;
+            }
+            else {
+
+                if (!grid[pHorz]?[pVert] : false)continue;
+
+                const isValid = pointIsValid(pHorz, pVert, grid);
+                if (isValid) {
+                    totalValid++;
+
+                    rollsRemoved = true;
+                    removedRolls++;
+                    grid[pVert]![pHorz] = "."; //Remove @ from grid for future iterations
+                }
+
+                if (isValid) debugLineBuffer += 'x'
+                else debugLineBuffer += curChar;
+            }
+
+            if (pHorz < (gridWidth -1)) pHorz++;
+            else {
+                debug(`${debugLineBuffer} \n`);
+
+                pVert++;
+                pHorz = 0;
+
+                if (pVert >= gridHeight -1) break;
+
+                debugLineBuffer = '';
+                
+            } 
         }
-
-        if (curChar === "." || curChar === "F") {
-            debugLineBuffer += curChar;
-        }
-        else {
-            const isValid = pointIsValid(pHorz, pVert, grid);
-            if (isValid) totalValid++;
-
-            if (isValid) debugLineBuffer += 'x'
-            else debugLineBuffer += curChar;
-        }
-
-        if (pHorz < (gridWidth -1)) pHorz++;
-        else {
-            console.log(`${debugLineBuffer}`)
-            pVert++;
-            pHorz = 0;
-
-            if (pVert >= gridHeight -1) break;
-
-            debugLineBuffer = '';
-        } 
+        debug(`removed Rolls: ${removedRolls}`);
+        console.log(`Removal Iterations: ${removalIterations} \n`)
     }
 
     return totalValid;
@@ -87,9 +116,6 @@ const pointIsValid = (x: number, y: number, grid: Grid): boolean => {
         //checkSquareOriginX++;
         checkSquareOriginY++;
     }
-
-
-    if (x === 2 && y === 0) assertEqual(collisions, 4);
 
     //fewer than 4
     //3 adjecent points plus target point for 4.
