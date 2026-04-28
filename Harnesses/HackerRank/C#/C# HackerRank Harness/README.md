@@ -5,7 +5,7 @@ This is a harness project for solving HackerRank coding puzzles in C#. It provid
 ## Features
 
 - **Stdin/Stdout Simulation**: Mimics HackerRank's input/output environment.
-- **Embedded Test Cases**: Run predefined test cases with pass/fail verification.
+- **Unit Testing with NUnit**: Run predefined test cases with detailed pass/fail feedback.
 - **Timing**: Measures execution time for performance checks.
 - **Error Handling**: Catches and logs exceptions.
 - **File-Based Testing**: Use input files for testing via redirection.
@@ -25,10 +25,11 @@ This is a harness project for solving HackerRank coding puzzles in C#. It provid
    ```
    Enter input lines and press Ctrl+D (or Ctrl+Z on Windows) to end.
 
-3. Run embedded tests:
+3. Run unit tests with NUnit:
    ```
-   dotnet run -- --test
+   dotnet test
    ```
+   This provides detailed pass/fail feedback for test cases.
 
 4. Test with input files:
    ```
@@ -41,16 +42,17 @@ This is a harness project for solving HackerRank coding puzzles in C#. It provid
 
 ### Structure
 
-- `Program.cs`: Main entry point, handles I/O and mode selection.
+- `Program.cs`: Main entry point, handles I/O.
 - `Solution.cs`: Contains the `Solve` method for problem logic. Modify this for each puzzle.
-- `TestHarness.cs`: Manages embedded test cases.
+- `SolutionTests.cs`: NUnit test class with test cases for verification.
 - `Inputs/`: Folder for sample input files.
 
 ### Customizing for a Problem
 
 1. Update the `Solve` method in `Solution.cs` with your algorithm.
-2. Add test cases to `TestHarness.cs` as needed.
-3. Create input files in `Inputs/` for file-based testing.
+2. Add or modify test cases in `SolutionTests.cs` as needed.
+3. Run tests: `dotnet test`
+4. Create input files in `Inputs/` for file-based testing.
 
 ### Debugging
 
@@ -61,4 +63,5 @@ This is a harness project for solving HackerRank coding puzzles in C#. It provid
 ## Notes
 
 - Execution time is logged to stderr (not stdout) to avoid interfering with HackerRank submissions.
-- Keep dependencies minimal; no external packages required.
+- Uses NUnit for unit testing; run `dotnet test` for automated test execution and feedback.
+- Keep dependencies minimal; only NUnit packages added for testing.

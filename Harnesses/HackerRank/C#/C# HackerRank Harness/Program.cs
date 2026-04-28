@@ -12,32 +12,24 @@ namespace C__HackerRank_Harness
         {
             try
             {
-                if (args.Length > 0 && args[0] == "--test")
+                // Read all input lines from stdin
+                var lines = new List<string>();
+                string? line;
+                while ((line = Console.ReadLine()) is not null)
                 {
-                    // Run embedded tests
-                    TestHarness.RunTests(Solution.Solve);
+                    lines.Add(line);
                 }
-                else
-                {
-                    // Read all input lines from stdin
-                    var lines = new List<string>();
-                    string? line;
-                    while ((line = Console.ReadLine()) is not null)
-                    {
-                        lines.Add(line);
-                    }
 
-                    // Measure execution time
-                    var stopwatch = Stopwatch.StartNew();
-                    var result = Solution.Solve(lines.ToArray());
-                    stopwatch.Stop();
+                // Measure execution time
+                var stopwatch = Stopwatch.StartNew();
+                var result = Solution.Solve(lines.ToArray());
+                stopwatch.Stop();
 
-                    // Output result
-                    Console.WriteLine(result);
+                // Output result
+                Console.WriteLine(result);
 
-                    // Log timing to stderr (not captured by HackerRank)
-                    Console.Error.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
-                }
+                // Log timing to stderr (not captured by HackerRank)
+                Console.Error.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
             }
             catch (Exception ex)
             {
